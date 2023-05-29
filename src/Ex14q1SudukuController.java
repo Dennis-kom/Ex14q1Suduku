@@ -9,6 +9,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -57,9 +58,9 @@ public class Ex14q1SudukuController {
     private int[][]cells_int;
     
     @FXML
-    private boolean DEBUG_MODE = false;
+    private boolean DEBUG_MODE = true;
     
-    
+    private Background backGround;
     @FXML
     public void initialize(){
         assert UpPane != null : "fx:id=\"UpPane\" was not injected: check your FXML file 'Ex14q1Suduku.fxml'.";
@@ -68,13 +69,16 @@ public class Ex14q1SudukuController {
         
     	cells_text = new TextField[(BLOCK_DIM*BLOCK_DIM)*(BLOCK_DIM*BLOCK_DIM)][(BLOCK_DIM*BLOCK_DIM)*(BLOCK_DIM*BLOCK_DIM)];
     	cells_int = new int[(BLOCK_DIM*BLOCK_DIM)*(BLOCK_DIM*BLOCK_DIM)][(BLOCK_DIM*BLOCK_DIM)*(BLOCK_DIM*BLOCK_DIM)];
-    	
+
+    	BackgroundFill fill =  new BackgroundFill(null, null, null);
+    	backGround = new Background(fill);
         
         System.out.println(DEBUG_MODE ? "Initialize":"");
 		for (int i = 0; i < BLOCK_DIM*BLOCKS_AMOUNT; i++) {
 			for (int j = 0; j < BLOCK_DIM*BLOCKS_AMOUNT; j++) {
 				
 				cells_text[i][j] = new TextField();
+				cells_text[i][j].setBackground(backGround);
 				cells_text[i][j].setPrefSize(gridPane.getPrefWidth() / 9, gridPane.getPrefHeight() / 9);
 				cells_text[i][j].setOnAction(new EventHandler<ActionEvent>(){@Override public void handle(ActionEvent e) {handleEnterPressed(e);}});
 				gridPane.add(cells_text[i][j], i, j);
@@ -97,7 +101,15 @@ public class Ex14q1SudukuController {
 
     @FXML
     void onActionSetBtn(ActionEvent event) {
-
+ 		for (int i = 0; i < BLOCK_DIM*BLOCKS_AMOUNT; i++) {
+ 			for (int j = 0; j < BLOCK_DIM*BLOCKS_AMOUNT; j++) {
+ 				System.out.println(DEBUG_MODE?cells_int[i][j]:"");
+ 				if (cells_int[i][j]!=0) {
+ 					cells_text[i][j].setEditable(false);
+ 					
+ 				}
+ 			}
+ 			}
     }
     
    private static boolean isLegalValue(String val) throws NumberFormatException {
@@ -112,6 +124,8 @@ public class Ex14q1SudukuController {
    }
    
    private void handleEnterPressed(ActionEvent e){
+
+	   
 		for (int i = 0; i < BLOCK_DIM*BLOCKS_AMOUNT; i++) {
 			for (int j = 0; j < BLOCK_DIM*BLOCKS_AMOUNT; j++) {
 				if(cells_text[i][j].getText() != null && cells_text[i][j].getText() != "") {
@@ -126,7 +140,7 @@ public class Ex14q1SudukuController {
 	}
 	   
    @FXML
-   private boolean isLegalPositions() {
+   private boolean isLegalPositions() { 
 	   
 	   int[] bucket = new int[BLOCK_DIM*BLOCKS_AMOUNT + 1]; // Assisting structure
 	   int[] bucket_c = new int[BLOCK_DIM*BLOCKS_AMOUNT + 1]; // Assisting structure
