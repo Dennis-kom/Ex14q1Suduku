@@ -58,6 +58,8 @@ public class Ex14q1SudukuController {
     private int[][]cells_int;
     
     @FXML
+    private boolean[][]cells_auth;
+    @FXML
     private boolean DEBUG_MODE = true;
     
     private Background backGround;
@@ -69,14 +71,14 @@ public class Ex14q1SudukuController {
         
     	cells_text = new TextField[(BLOCK_DIM*BLOCK_DIM)*(BLOCK_DIM*BLOCK_DIM)][(BLOCK_DIM*BLOCK_DIM)*(BLOCK_DIM*BLOCK_DIM)];
     	cells_int = new int[(BLOCK_DIM*BLOCK_DIM)*(BLOCK_DIM*BLOCK_DIM)][(BLOCK_DIM*BLOCK_DIM)*(BLOCK_DIM*BLOCK_DIM)];
-
+    	cells_auth = new boolean[(BLOCK_DIM*BLOCK_DIM)*(BLOCK_DIM*BLOCK_DIM)][(BLOCK_DIM*BLOCK_DIM)*(BLOCK_DIM*BLOCK_DIM)];
     	BackgroundFill fill =  new BackgroundFill(null, null, null);
     	backGround = new Background(fill);
         
         System.out.println(DEBUG_MODE ? "Initialize":"");
 		for (int i = 0; i < BLOCK_DIM*BLOCKS_AMOUNT; i++) {
 			for (int j = 0; j < BLOCK_DIM*BLOCKS_AMOUNT; j++) {
-				
+				cells_auth[i][j] = false;
 				cells_text[i][j] = new TextField();
 				cells_text[i][j].setBackground(backGround);
 				cells_text[i][j].setPrefSize(gridPane.getPrefWidth() / 9, gridPane.getPrefHeight() / 9);
@@ -114,7 +116,7 @@ public class Ex14q1SudukuController {
     
    private static boolean isLegalValue(String val) throws NumberFormatException {
 	   try {
-		   if(Integer.parseInt(val) <= 0 || Integer.parseInt(val) > 9) {return false;}
+		   if(Integer.parseInt(val) < 0 || Integer.parseInt(val) > 9) {return false;}
 	   		else {return true;}
 	   }
 	   catch(NumberFormatException ex) {
@@ -131,8 +133,14 @@ public class Ex14q1SudukuController {
 				if(cells_text[i][j].getText() != null && cells_text[i][j].getText() != "") {
 						if(isLegalValue(cells_text[i][j].getText())) {
 							//System.out.println(cells_text[i][j].getText());
-							cells_int[i][j] = Integer.parseInt(cells_text[i][j].getText());
+							try {
+								cells_int[i][j] = Integer.parseInt(cells_text[i][j].getText());
 							}
+							catch(Exception NumberFormatException) {
+								JOptionPane.showConfirmDialog(null, "Ilegal numbers combination!","Error",JOptionPane.CLOSED_OPTION);
+							}
+							}
+					
 					}
 				}
 			}
